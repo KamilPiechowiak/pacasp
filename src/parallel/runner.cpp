@@ -26,29 +26,44 @@ void Runner::run() {
         }
     }
     Shelf::hillClimber();
-    Shelf::simulatedAnnealing2(0.8, 1, 45);
-    Shelf::simulatedAnnealing2(0.999, 3, 17);
+    Shelf::simulatedAnnealing2(0.606531, 10, 10000);
+    Shelf::simulatedAnnealing2(0.899661, 1, 10000);
+    Shelf::simulatedAnnealing2(0.977887, 10, 10000);
 
-    BottomLeft::bldw();
-    BottomLeft::graspBldw(10);
-    BottomLeft::graspBldw(100);
-    BottomLeft::graspBldw(1000);
     BottomLeft::bldh();
+    BottomLeft::bldw();
+    BottomLeft::blda();
+    BottomLeft::blih();
+    BottomLeft::bliw();
+    BottomLeft::blia();
+
+    BottomLeft::graspBldh(5);
     BottomLeft::graspBldh(10);
-    BottomLeft::graspBldh(100);
-    BottomLeft::graspBldh(1000);
+    BottomLeft::graspBlda(5);
+    BottomLeft::graspBldw(2);
+    BottomLeft::graspBldw(5);
+    BottomLeft::graspBldw(1000);
+    
     BottomLeft::hillClimber();
-    BottomLeft::simulatedAnnealing(0.8, 2, 3500); //bigger instances, smaller limits
-    BottomLeft::simulatedAnnealing(0.993, 4, 400);
-    BottomLeft::multiStartLocalSearch();
-    BottomLeft::iteratedLocalSearch();
-    BottomLeft::tabuSearch(30, 55); //small instances, short time
-    BottomLeft::tabuSearch(30, 145); //small instances, long time
-    BottomLeft::tabuSearch(30, 35); //big instances, short time
-    BottomLeft::tabuSearch(30, 115); //big instances, long time
-    BottomLeft::tabuSearch(); //dynamic parameters
-    BottomLeft::tabuSearch2(30, 13); //short time
-    BottomLeft::tabuSearch2(30, 20); //long time
+
+    BottomLeft::simulatedAnnealing(0.606531, 1, 1000);
+    BottomLeft::simulatedAnnealing(0.606531, 1, 10000);
+    BottomLeft::simulatedAnnealing(0.899661, 3, 1000);
+    BottomLeft::simulatedAnnealing(0.995282, 1, 10000);
+
+    BottomLeft::multiStartLocalSearch(1, 1);
+    BottomLeft::multiStartLocalSearch(1, 2);
+    BottomLeft::multiStartLocalSearch(1, 5);
+
+    BottomLeft::tabuSearch(2, 22);
+    BottomLeft::tabuSearch(22, 46);
+    BottomLeft::tabuSearch(100, 46);
+    BottomLeft::tabuSearch(215, 215);
+    
+    BottomLeft::tabuSearch2(1, 46);
+    BottomLeft::tabuSearch2(5, 46);
+    BottomLeft::tabuSearch2(5, 100);
+    BottomLeft::tabuSearch2(22, 22);
 
     destroy();
 }

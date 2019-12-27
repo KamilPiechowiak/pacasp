@@ -90,11 +90,11 @@ int main(int argc, char *argv[]) {
     }
     if(option == "portfolio") {
         localMinCost();
-    } else if(option == "parallel") {
+    } else if(option == "run") {
         Runner r(1000);
         r.run();
     } else if(option == "tune") {
-        Tuner t(1000);
+        Tuner t(1000*60*4);
         t.run();
     } else {
         defaultProcessing();

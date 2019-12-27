@@ -33,7 +33,8 @@ void BottomLeft::init(ll _w, vector<Rectangle> &_rect, ll _maxTime) {
     int n = rect.size();
     placement.resize(n);
     pref = "BL-";
-    maxTime = 1000000*_maxTime;//in nanoseconds
+    maxTime = 1000000LL*_maxTime;//in nanoseconds
+    cerr << maxTime << "\n";
 }
 
 void BottomLeft::saveImg(string name, ll height) {

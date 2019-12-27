@@ -25,7 +25,7 @@ void Tuner::getResults() {
         p.push_back(round(par[0]));
     }
     if(defaultAction == _simulatedAnnealing) {
-        BottomLeft::simulatedAnnealing(exp(-1.0/par[0]), p[1], p[2]);
+        BottomLeft::simulatedAnnealing(exp(-1.0/par[0]), p[0], p[1]);
     } else if(defaultAction == _multiStartLocalSearch) {
         BottomLeft::multiStartLocalSearch(p[0], p[1]);
     } else if(defaultAction == _tabuSearch) {
@@ -33,7 +33,7 @@ void Tuner::getResults() {
     } else if(defaultAction == _tabuSearch2) {
         BottomLeft::tabuSearch2(p[0], p[1]);
     } else if(defaultAction == _shelfSimulatedAnnealing) {
-        Shelf::simulatedAnnealing2(exp(-1.0/par[0]), p[1], p[2]);
+        Shelf::simulatedAnnealing2(exp(-1.0/par[0]), p[0], p[1]);
     } else if(defaultAction == _graspBldh) {
         BottomLeft::graspBldh(p[0]);
     } else if(defaultAction == _graspBldw) {
@@ -68,15 +68,15 @@ void Tuner::tune() {
     m[_shelfSimulatedAnnealing] = {{2.0, 1000.0}, {1.0, 100.0}, {1.0, 10000.0}};
     m[_graspBldw] = {{1.0, 1000.0}};
     m[_graspBldh] = {{1.0, 1000.0}};
-    m[_graspBldh] = {{1.0, 1000.0}};
+    m[_graspBlda] = {{1.0, 1000.0}};
     
     vector<int> sizes = {62, 125, 250, 500, 1000, 2000, 4000, 8000};
     int instancesPerTimePerSize = 10;
-    vector<ActionType> actions = {_simulatedAnnealing, _multiStartLocalSearch, _tabuSearch, _tabuSearch2, _shelfSimulatedAnnealing, _graspBldw, _graspBldh};
+    vector<ActionType> actions = {_simulatedAnnealing, _multiStartLocalSearch, _tabuSearch, _tabuSearch2, _shelfSimulatedAnnealing, _graspBldw, _graspBldh, _graspBlda};
 
-    sizes = {125};
-    instancesPerTimePerSize = 2;
-    actions = {_tabuSearch2};
+    // sizes = {125};
+    // instancesPerTimePerSize = 2;
+    // actions = {_tabuSearch2};
     assert(int(sizes.size())*instancesPerTimePerSize == numberOfNodes);
 
     for(int s : sizes) {
@@ -89,9 +89,9 @@ void Tuner::tune() {
     loadData();
     for(ActionType a : actions) {
         if(m[a].size() > 2) {
-            steps = 4;
+            steps = 5;
         } else {
-            steps = 3;
+            steps = 10;
         }
         defaultAction = a;
         rec(0, m[defaultAction]);

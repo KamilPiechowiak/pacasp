@@ -9,7 +9,7 @@ vector<pll> Shelf::placement;
 void Shelf::init(ll _w, vector<Rectangle> &_rr, ll _maxTime) {
     w = _w;
     rr = _rr;
-    maxTime = 1000000*_maxTime;
+    maxTime = 1000000LL*_maxTime;
     int n = rr.size();
     placement.resize(n);
     pref = "Shelf-";
