@@ -1,0 +1,11 @@
+.vscode
+datasets
+docs
+gen
+instances
+obj
+out
+portfolios
+sp
+tuning
+*.zip

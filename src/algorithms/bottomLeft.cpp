@@ -34,7 +34,6 @@ void BottomLeft::init(ll _w, vector<Rectangle> &_rect, ll _maxTime) {
     placement.resize(n);
     pref = "BL-";
     maxTime = 1000000LL*_maxTime;//in nanoseconds
-    cerr << maxTime << "\n";
 }
 
 void BottomLeft::saveImg(string name, ll height) {

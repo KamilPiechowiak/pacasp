@@ -58,14 +58,24 @@ void showAll(ll w, vector<Rectangle> &rect, ll maxTime) {
     BottomLeft::tabuSearch2(30, 20); //long time
 }
 
-void localMinCost() {
-    system("export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ibm/ILOG/CPLEX_Studio128/opl/bin/x86-64_linux");
+void computePortfolio(vector<pll> instances) {
     for(int i=1; i <= 500; i++) {
-        Portfolio p(i);
+        Portfolio p(i, instances);
         p.run();
         cerr << "\r" << i;
     }
     cerr << "\n";
+}
+
+void localMinCost() {
+    // system("export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ibm/ILOG/CPLEX_Studio128/opl/bin/x86-64_linux");
+    // computePortfolio({{0, 999}});
+    // computePortfolio({{300, 699}});
+    // computePortfolio({{400, 799}});
+    // computePortfolio({{500, 999}});
+    // computePortfolio({{700, 999}});
+    // computePortfolio({{1000, 1999}});
+    computePortfolio({{1000, 2206}});
 }
 
 void defaultProcessing() {
@@ -91,7 +101,7 @@ int main(int argc, char *argv[]) {
     if(option == "portfolio") {
         localMinCost();
     } else if(option == "run") {
-        Runner r(1000);
+        Runner r(1000*60*60);
         r.run();
     } else if(option == "tune") {
         Tuner t(1000*60*4);

@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name=pacasp
-#SBATCH --output=pac_asp.out
-#SBATCH --error=pac_asp.err
-#SBATCH --time=00:10:00
+#SBATCH --output=pacasp.out
+#SBATCH --error=pacasp.err
+#SBATCH --time=50:00:00
 #SBATCH --ntasks=2207
 #SBATCH -p standard
 
@@ -15,6 +15,7 @@ cp $SLURM_SUBMIT_DIR/sp sp
 cp $SLURM_SUBMIT_DIR/gen gen
 cp $SLURM_SUBMIT_DIR/instances/* instances/
 module load mpich
-mpiexec -n 2207 ./sp run
-cp -r $TMPDIR $SLURM_SUBMIT_DIR/
-rm -r $TMPDIR
+time mpiexec -n 2207 ./sp run
+# zip -r $SLURM_JOBID.zip out
+# cp -r $SLURM_JOBID.zip $SLURM_SUBMIT_DIR/
+# rm -r $TMPDIR

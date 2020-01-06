@@ -1,6 +1,6 @@
 #include"portfolio.hpp"
 
-Portfolio::Portfolio(int _timeId) {
+Portfolio::Portfolio(int _timeId, vector<pll> instances) : instances(instances) {
     timeId = _timeId-1;
 }
 
@@ -10,6 +10,7 @@ void Portfolio::run() {
     getInstances();
     getData();
     getWinners();
+    // computeStats();
     computeMinCost();
     // computeMinRegret();
     // getResult();
@@ -50,7 +51,7 @@ void Portfolio::getData() {
         for(pll ins : instances) {
             for(int i=ins.first; i <= ins.second; i++) {
                 data[a][j] = {-1, -1};
-                string name = "out3/" + to_string(i) + "_" + algorithms[a] + ".log";
+                string name = "out/" + to_string(i) + "_" + algorithms[a] + ".log";
                 ifstream f;
                 f.open(name);
                 ll ti, qu;
@@ -101,11 +102,14 @@ void Portfolio::getWinners() {
 }
 
 void Portfolio::computeMinSth() {
-    fname = "portfolios/dat/" + to_string(timeId) + ".dat";
+    string directory = "portfolios/dat/";
+    system(("mkdir -p " + directory).c_str());
+    fname = directory + to_string(timeId) + ".dat";
     f.open(fname);
     f << "NBA=" << numberOfAlgorithms << ";\n";
     f << "NBI=" << numberOfInstances << ";\n";
     f << "timeId=\"" << timeId << "\";\n";
+    f << "path=\"" << path << "\";\n";
 }
 
 void Portfolio::computeMinCost() {
@@ -141,8 +145,10 @@ void Portfolio::computeMinCost() {
 
     f.close();
 
+    string directory = "portfolios/" + path + "/";
+    system(("mkdir -p " + directory).c_str());
+    gname =  directory + to_string(timeId) + ".cost";
     oplrun("MinCost.mod");
-    gname = "portfolios/res/" + to_string(timeId) + ".cost";
 }
 
 void Portfolio::computeMinRegret() {
@@ -180,8 +186,10 @@ void Portfolio::computeMinRegret() {
 
     f.close();
 
+    string directory = "portfolios/" + path + "/";
+    system(("mkdir -p " + directory).c_str());
+    gname = directory + to_string(timeId) + ".regr";
     oplrun("MxRegr.mod");
-    gname = "portfolios/res/" + to_string(timeId) + ".regr";
 }
 
 void Portfolio::oplrun(string name) {
@@ -208,21 +216,28 @@ void Portfolio::getResult() {
 
 void Portfolio::getAlgorithmsList() {
     algorithms = {
+        "blda",
         "bldh",
         "bldw",
         "BLhillClimber",
-        "BLils",
-        "BLmls_10_100",
-        "BLsa_2_3500",
-        "BLsa_4_400",
-        "BLts2_30_0",
-        "BLts2_30_13",
-        "BLts2_30_20",
-        "BLts_30_0",
-        "BLts_30_115",
-        "BLts_30_145",
-        "BLts_30_35",
-        "BLts_30_55",
+        "blia",
+        "blih",
+        "bliw",
+        "BLmls_1_1",
+        "BLmls_1_2",
+        "BLmls_1_5",
+        "BLsa_0.606531_1_10000",
+        "BLsa_0.606531_1_1000",
+        "BLsa_0.899661_3_1000",
+        "BLsa_0.995282_1_10000",
+        "BLts_100_46",
+        "BLts2_1_46",
+        "BLts_215_215",
+        "BLts2_22_22",
+        "BLts_2_22",
+        "BLts_22_46",
+        "BLts2_5_100",
+        "BLts2_5_46",
         "gg_heightAsc_bestFit",
         "gg_heightAsc_bestFit_rotated",
         "gg_heightAsc_nextFit",
@@ -247,23 +262,44 @@ void Portfolio::getAlgorithmsList() {
         "gg_widthDsc_nextFit_rotated",
         "gg_widthDsc_worstFit",
         "gg_widthDsc_worstFit_rotated",
-        "graspBldh_1000",
-        "graspBldh_100",
+        "graspBlda_5",
         "graspBldh_10",
+        "graspBldh_5",
         "graspBldw_1000",
-        "graspBldw_100",
-        "graspBldw_10",
+        "graspBldw_2",
+        "graspBldw_5",
         "SHhillClimber",
-        "SHsa_1_45",
-        "SHsa_3_17"
+        "SHsa_0.606531_10_10000",
+        "SHsa_0.899661_1_10000",
+        "SHsa_0.977887_10_10000"
     };
+    //ls out/0_* | cut -c 1-6 --complement | rev | cut -c 1-4 --complement | rev | xargs -I {} echo \"{}\"
     numberOfAlgorithms = algorithms.size();
 }
 
+
 void Portfolio::getInstances() {
-    instances = {{1, 1000}};
     numberOfInstances=0;
+    path = "";
     for(pii x : instances) {
         numberOfInstances+=x.second-x.first+1;
+        path=to_string(x.first)+"-"+to_string(x.second);
+    }
+}
+
+void Portfolio::computeStats() {
+    vector<pair<int, int>> totalWins(numberOfAlgorithms);
+    for(int a=0; a < numberOfAlgorithms; a++) {
+        totalWins[a].second = a;
+    }
+    for(int i=0; i < numberOfInstances; i++) {
+        for(int a : wins[i]) {
+            totalWins[a].first++;
+        }
+    }
+    sort(totalWins.begin(), totalWins.end());
+    reverse(totalWins.begin(), totalWins.end());
+    for(auto x : totalWins) {
+        cout << x.first << " " << algorithms[x.second] << "\n";
     }
 }

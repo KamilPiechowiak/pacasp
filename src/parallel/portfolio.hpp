@@ -5,6 +5,7 @@
 
 struct Portfolio {
     int timeId;
+    string path;
     ll maxTime;
     vector<string> algorithms;
     int numberOfAlgorithms;
@@ -22,7 +23,7 @@ struct Portfolio {
     ifstream g;
     string gname;
 
-    Portfolio(int timeId);
+    Portfolio(int timeId, vector<pll> instances);
     void run();
     void getTimeLimit();
     void getAlgorithmsList();
@@ -34,6 +35,7 @@ struct Portfolio {
     void computeMinRegret();
     void oplrun(string name);
     void getResult();
+    void computeStats();
 };
 
 #endif

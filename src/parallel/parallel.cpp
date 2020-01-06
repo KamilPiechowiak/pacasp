@@ -30,7 +30,7 @@ void Parallel::loadData() {
         rect.push_back(Rectangle(a, b, i));
     }
     Recordable::setInstanceId(nodeId);
-    cerr << maxTime << "\n";
+    // cerr << maxTime << "\n";
     BottomLeft::init(w, rect, maxTime);
     Shelf::init(w, rect, maxTime);
     Bounds::byArea(w, rect);
