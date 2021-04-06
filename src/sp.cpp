@@ -3,6 +3,7 @@
 #include"algorithms/shelf.hpp"
 #include"algorithms/bounds.hpp"
 #include"algorithms/bottomLeft.hpp"
+#include"algorithms/skyline.hpp"
 #include"parallel/runner.hpp"
 #include"parallel/tuner.hpp"
 #include"parallel/portfolio.hpp"
@@ -12,17 +13,24 @@ void showAll(ll w, vector<Rectangle> &rect, ll maxTime) {
 
     Shelf::init(w, rect, maxTime);
     BottomLeft::init(w, rect, maxTime);
+    Skyline::init(w, rect, maxTime);
 
     vector<ll> v = {
-        BottomLeft::tabuSearch2(30, 115),
-        BottomLeft::tabuSearch(30, 115),
-        BottomLeft::simulatedAnnealing(0.993, 4, 400),
+        Bounds::byArea(w, rect),
+        Bounds::byWiderThanHalf(w, rect)                                                                                                                                                                                                                                                                                    ,
+        Skyline::burke(),
+        Skyline::ish(),
+        Skyline::tabuSearch(),
+        // BottomLeft::tabuSearch(30, 55)
         Shelf::simulatedAnnealing2(0.8, 1, 45)
     };
     for(ll r : v) {
         cout << r << "\n";
     }
     exit(0);
+
+    Bounds::byArea(w, rect);
+    Bounds::byWiderThanHalf(w, rect);
 
     Shelf::init(w, rect, maxTime);
     for(int i=0; i < 4; i++) {
@@ -85,15 +93,16 @@ void defaultProcessing() {
     cin >> n >> w;
     ImgSaver::init(n);
     for(int i=0; i < n; i++) {
-        ll a, b;
-        cin >> a >> b;
+        ll id, a, b;
+        cin >> id >> a >> b;
         rect.push_back(Rectangle(a, b, i));
     }
-    showAll(w, rect, 1000);
+    showAll(w, rect, 2000);
 }
 
 int main(int argc, char *argv[]) {
     ios_base::sync_with_stdio(0);
+    setSeed(13);
     string option = "default";
     if(argc == 2) {
         option = string(argv[1]);

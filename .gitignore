@@ -6,6 +6,12 @@ instances
 obj
 out
 portfolios
+images
 sp
 tuning
 *.zip
+__pycache__
+md
+out_local
+paper
+used_instances

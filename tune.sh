@@ -2,7 +2,7 @@
 #SBATCH --job-name=pac_asp
 #SBATCH --output=pacasp.out
 #SBATCH --error=pacasp.err
-#SBATCH --time=80:00:00
+#SBATCH --time=00:30:00
 #SBATCH --ntasks=80
 #SBATCH -p standard
 

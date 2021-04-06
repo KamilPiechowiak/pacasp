@@ -369,7 +369,7 @@ ll Shelf::simulatedAnnealing() {
     vector<int> ord = x.first;
     ll currentHeight = x.second;
     vector<int> best = ord;
-    ll bestHeight = currentHeight;
+    bestHeight = currentHeight;
 
     double T = 1000.0*currentHeight;
     double mult = 0.9;

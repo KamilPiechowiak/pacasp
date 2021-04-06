@@ -24,20 +24,24 @@ vector<HSLColor> ImgSaver::getColorPalette(int n) {
 }
 
 void ImgSaver::init(int n) {
-    // Magick::InitializeMagick({});
-    // colorPalette = getColorPalette(n);
+    #if DEBUG
+        Magick::InitializeMagick({});
+        colorPalette = getColorPalette(n);
+    #endif
 }
 
 void ImgSaver::saveImg(string name, ll width, ll height, vector<Rectangle> &rect, vector<pll> &placement) {
-    // Magick::Image img (Magick::Geometry(width, height), "white");
-    // for(int i=0; i < (int)rect.size(); i++) {
-    //     Rectangle &r = rect[i];
-    //     HSLColor &c = colorPalette[r.id];
-    //     pll &pos = placement[r.id];
-    //     img.fillColor(Magick::ColorHSL(c.h, c.s, c.l));
-    //     img.draw(Magick::DrawableRectangle(pos.first, pos.second, pos.first+r.width-1, pos.second+r.height-1));
-    // }
-    // img.flip();
-    // img.magick("png");
-    // img.write("images/"+name);
+    #if DEBUG
+        Magick::Image img (Magick::Geometry(width, height), "white");
+        for(int i=0; i < (int)rect.size(); i++) {
+            Rectangle &r = rect[i];
+            HSLColor &c = colorPalette[r.id];
+            pll &pos = placement[r.id];
+            img.fillColor(Magick::ColorHSL(c.h, c.s, c.l));
+            img.draw(Magick::DrawableRectangle(pos.first, pos.second, pos.first+r.width-1, pos.second+r.height-1));
+        }
+        img.flip();
+        img.magick("png");
+        img.write("images/"+name);
+    #endif
 }

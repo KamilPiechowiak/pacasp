@@ -35,7 +35,7 @@ public:
     static ll blih();
     static ll blia();
     static ll graspBlda(int bufferSize);
-    static ll bl(vector<Rectangle> &rect, vector<int> &ord);
+    static ll bl(vector<Rectangle> &rect, vector<int> &ord, bool debug=false);
     static ll hillClimber();
     static ll simulatedAnnealing(double mult0=0.9, int maxNumberOfAccepted=2, int maxNumberOfIterations=20);
     static ll multiStartLocalSearch(int numberOfLists = 10, int numberOfNeighbours = 100);

@@ -9,7 +9,7 @@ int Recordable::instanceId;
 void Recordable::openLog(string name) {
     if(verbose) {
         f.close();
-        f.open("out/" + to_string(instanceId) + "_" + name + ".log");
+        f.open("out_local/" + to_string(instanceId) + "_" + name + ".log");
     }
 }
 

@@ -40,12 +40,13 @@ void BottomLeft::saveImg(string name, ll height) {
     ImgSaver::saveImg(pref+name, w, height, rect, placement);
 }
 
-ll BottomLeft::bl(vector<Rectangle> &rect, vector<int> &ord) {
+ll BottomLeft::bl(vector<Rectangle> &rect, vector<int> &ord, bool debug) {
     ll currentHeight=0;
     set<Segment> levels;
     levels.insert(Segment(0, w-1, 0));
     deque<Segment> d;
     for(int id : ord) {
+        // cerr << d.size() << "\n";
         Rectangle &r = rect[id];
         ll minHeight = currentHeight+1;
         ll start=0;
@@ -71,8 +72,12 @@ ll BottomLeft::bl(vector<Rectangle> &rect, vector<int> &ord) {
             }
         }
         Segment a(start, start+r.width-1, minHeight+r.height);
-        i = levels.upper_bound(Segment(start, 0, 0));
+        i = levels.upper_bound(Segment(start, -1, 0));
         while(i != levels.end() && (*i).right <= start+r.width-1) {
+            if(debug) {
+                auto s = *i;
+                cerr << "(" << s.left << "," << s.right << "," << s.height << "); ";
+            }
             levels.erase(i++);
         }
         if(i != levels.end() && (*i).left <= start+r.width-1) {
@@ -83,6 +88,12 @@ ll BottomLeft::bl(vector<Rectangle> &rect, vector<int> &ord) {
         levels.insert(a);
         placement[r.id] = {start, minHeight};
         currentHeight = max(currentHeight, minHeight+r.height);
+        if(debug) {
+            for(auto s : levels) {
+                cerr << "(" << s.left << "," << s.right << "," << s.height << "), ";
+            }
+            cerr << "\n";
+        }
     }
     return currentHeight;
 }

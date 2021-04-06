@@ -2,7 +2,9 @@
 #define IMGSAVER_H
 
 #include"general/rectangle.hpp"
-// #include<Magick++.h>
+#if DEBUG
+    #include<Magick++.h>
+#endif
 
 struct HSLColor {
     double h;
