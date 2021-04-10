@@ -5,14 +5,20 @@
 #include"parallel.hpp"
 
 enum ActionType {
-    _simulatedAnnealing,
-    _multiStartLocalSearch,
-    _tabuSearch,
-    _tabuSearch2,
-    _shelfSimulatedAnnealing,
+    _BLsimulatedAnnealing,
+    _BLmultiStartLocalSearch,
+    _BLtabuSearch_ord_hash,
+    _BLtabuSearch_move_hash,
+    _SHSimulatedAnnealing,
     _graspBldw,
     _graspBldh,
-    _graspBlda
+    _graspBlda,
+    _BLiteratedLocalSearch,
+    _SKsimulatedAnnealing,
+    _SKmultiStartLocalSearch,
+    _SKtabuSearch_ord_hash,
+    _SKtabuSearch_move_hash,
+    _SKiteratedLocalSearch,
 };
 
 struct EnumClassHash

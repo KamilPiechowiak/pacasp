@@ -1,6 +1,8 @@
 #include"runner.hpp"
 #include"algorithms/bottomLeft.hpp"
 #include"algorithms/shelf.hpp"
+#include"algorithms/bounds.hpp"
+#include"algorithms/skyline.hpp"
 
 Runner::Runner(ll maxTime) : Parallel(maxTime) {}
 
@@ -17,53 +19,61 @@ void Runner::generateInstance() {
 void Runner::run() {
     generateInstance();
     loadData();
+    Recorder recorder("out", nodeId, maxTime);
+
+    Bounds bounds(w, rect, recorder);
+    BottomLeft bottom_left(w, rect, recorder);
+    Shelf shelf(w, rect, recorder);
+    Skyline skyline(w, rect, recorder);
+    bounds.byArea();
+    bounds.byWiderThanHalf();
     
     for(int i=0; i < 4; i++) {
         for(int j=0; j < 3; j++) {
             for(int k=0; k < 2; k++) {
-                Shelf::genericGreedy((ggOrder)i, (ggShelf)j, (bool)k);
+                shelf.genericGreedy((ggOrder)i, (ggShelf)j, (bool)k);
             }
         }
     }
-    Shelf::hillClimber();
-    Shelf::simulatedAnnealing2(0.606531, 10, 10000);
-    Shelf::simulatedAnnealing2(0.899661, 1, 10000);
-    Shelf::simulatedAnnealing2(0.977887, 10, 10000);
+    shelf.hillClimber();
+    shelf.simulatedAnnealing2(0.606531, 10, 10000);
+    shelf.simulatedAnnealing2(0.899661, 1, 10000);
+    shelf.simulatedAnnealing2(0.977887, 10, 10000);
 
-    BottomLeft::bldh();
-    BottomLeft::bldw();
-    BottomLeft::blda();
-    BottomLeft::blih();
-    BottomLeft::bliw();
-    BottomLeft::blia();
+    bottom_left.bldh();
+    bottom_left.bldw();
+    bottom_left.blda();
+    bottom_left.blih();
+    bottom_left.bliw();
+    bottom_left.blia();
 
-    BottomLeft::graspBldh(5);
-    BottomLeft::graspBldh(10);
-    BottomLeft::graspBlda(5);
-    BottomLeft::graspBldw(2);
-    BottomLeft::graspBldw(5);
-    BottomLeft::graspBldw(1000);
+    bottom_left.graspBldh(5);
+    bottom_left.graspBldh(10);
+    bottom_left.graspBlda(5);
+    bottom_left.graspBldw(2);
+    bottom_left.graspBldw(5);
+    bottom_left.graspBldw(1000);
     
-    BottomLeft::hillClimber();
+    bottom_left.hillClimber();
 
-    BottomLeft::simulatedAnnealing(0.606531, 1, 1000);
-    BottomLeft::simulatedAnnealing(0.606531, 1, 10000);
-    BottomLeft::simulatedAnnealing(0.899661, 3, 1000);
-    BottomLeft::simulatedAnnealing(0.995282, 1, 10000);
+    bottom_left.simulatedAnnealing(0.606531, 1, 1000);
+    bottom_left.simulatedAnnealing(0.606531, 1, 10000);
+    bottom_left.simulatedAnnealing(0.899661, 3, 1000);
+    bottom_left.simulatedAnnealing(0.995282, 1, 10000);
 
-    BottomLeft::multiStartLocalSearch(1, 1);
-    BottomLeft::multiStartLocalSearch(1, 2);
-    BottomLeft::multiStartLocalSearch(1, 5);
+    // bottom_left.multiStartLocalSearch(1, 1);
+    // bottom_left.multiStartLocalSearch(1, 2);
+    // bottom_left.multiStartLocalSearch(1, 5);
 
-    BottomLeft::tabuSearch(2, 22);
-    BottomLeft::tabuSearch(22, 46);
-    BottomLeft::tabuSearch(100, 46);
-    BottomLeft::tabuSearch(215, 215);
+    bottom_left.tabuSearch(true, 2, 22);
+    bottom_left.tabuSearch(true, 22, 46);
+    bottom_left.tabuSearch(true, 100, 46);
+    bottom_left.tabuSearch(true, 215, 215);
     
-    BottomLeft::tabuSearch2(1, 46);
-    BottomLeft::tabuSearch2(5, 46);
-    BottomLeft::tabuSearch2(5, 100);
-    BottomLeft::tabuSearch2(22, 22);
+    bottom_left.tabuSearch(false, 1, 46);
+    bottom_left.tabuSearch(false, 5, 46);
+    bottom_left.tabuSearch(false, 5, 100);
+    bottom_left.tabuSearch(false, 22, 22);
 
     destroy();
 }

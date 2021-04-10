@@ -9,61 +9,71 @@
 #include"parallel/portfolio.hpp"
 
 void showAll(ll w, vector<Rectangle> &rect, ll maxTime) {
-    Recordable::setInstanceId(0);
+    Recorder recorder("out_local", 0, maxTime);
 
-    Shelf::init(w, rect, maxTime);
-    BottomLeft::init(w, rect, maxTime);
-    Skyline::init(w, rect, maxTime);
+    Bounds bounds(w, rect, recorder);
+    Shelf shelf(w, rect, recorder);
+    BottomLeft bottom_left(w, rect, recorder);
+    Skyline skyline(w, rect, recorder);
 
     vector<ll> v = {
-        Bounds::byArea(w, rect),
-        Bounds::byWiderThanHalf(w, rect)                                                                                                                                                                                                                                                                                    ,
-        Skyline::burke(),
-        Skyline::ish(),
-        Skyline::tabuSearch(),
-        // BottomLeft::tabuSearch(30, 55)
-        Shelf::simulatedAnnealing2(0.8, 1, 45)
+        bounds.byArea(),    
+        bounds.byWiderThanHalf()                                                                                                                                                                                                                                                                                    ,
+        // skyline.burke(),
+        // skyline.ish(),
+        // skyline.tabuSearch(),
+        // skyline.tabuSearch(12, 10),
+        skyline.tabuSearch(),
+        // skyline.hillClimber(),
+        // skyline.simulatedAnnealing(),
+        skyline.multiStartLocalSearch(),
+        skyline.iteratedLocalSearch(),
+        // bottom_left.tabuSearch(30, 55),
+        // bottom_left.hillClimber(),
+        // bottom_left.simulatedAnnealing(),
+        // bottom_left.tabuSearch(),
+        bottom_left.iteratedLocalSearch(),
+        bottom_left.multiStartLocalSearch(),
+        shelf.simulatedAnnealing2(0.8, 1, 45)
     };
     for(ll r : v) {
         cout << r << "\n";
     }
-    exit(0);
+    return;
 
-    Bounds::byArea(w, rect);
-    Bounds::byWiderThanHalf(w, rect);
+    bounds.byArea();
+    bounds.byWiderThanHalf();
 
-    Shelf::init(w, rect, maxTime);
     for(int i=0; i < 4; i++) {
         for(int j=0; j < 3; j++) {
             for(int k=0; k < 2; k++) {
-                Shelf::genericGreedy((ggOrder)i, (ggShelf)j, (bool)k);
+                shelf.genericGreedy((ggOrder)i, (ggShelf)j, (bool)k);
             }
         }
     }
-    Shelf::hillClimber();
-    Shelf::simulatedAnnealing2(0.8, 1, 45);
-    Shelf::simulatedAnnealing2(0.999, 3, 17);
+    shelf.hillClimber();
+    shelf.simulatedAnnealing2(0.8, 1, 45);
+    shelf.simulatedAnnealing2(0.999, 3, 17);
 
-    BottomLeft::init(w, rect, maxTime);
-    BottomLeft::bldw();
-    BottomLeft::graspBldw(10);
-    BottomLeft::graspBldw(100);
-    BottomLeft::graspBldw(1000);
-    BottomLeft::bldh();
-    BottomLeft::graspBldh(10);
-    BottomLeft::graspBldh(100);
-    BottomLeft::graspBldh(1000);
-    BottomLeft::hillClimber();
-    BottomLeft::simulatedAnnealing(0.8, 2, 3500); //bigger instances, smaller limits
-    BottomLeft::simulatedAnnealing(0.993, 4, 400);
-    BottomLeft::multiStartLocalSearch();
-    BottomLeft::iteratedLocalSearch();
-    BottomLeft::tabuSearch(30, 55); //small instances, short time
-    BottomLeft::tabuSearch(30, 145); //small instances, long time
-    BottomLeft::tabuSearch(30, 35); //big instances, short time
-    BottomLeft::tabuSearch(30, 115); //big instances, long time
-    BottomLeft::tabuSearch2(30, 13); //short time
-    BottomLeft::tabuSearch2(30, 20); //long time
+    bottom_left.bldw();
+    bottom_left.graspBldw(10);
+    bottom_left.graspBldw(100);
+    bottom_left.graspBldw(1000);
+    bottom_left.bldh();
+    bottom_left.graspBldh(10);
+    bottom_left.graspBldh(100);
+    bottom_left.graspBldh(1000);
+    bottom_left.hillClimber();
+    bottom_left.simulatedAnnealing(0.8, 2, 3500); //bigger instances, smaller limits
+    bottom_left.simulatedAnnealing(0.993, 4, 400);
+    bottom_left.multiStartLocalSearch();
+    bottom_left.iteratedLocalSearch();
+    bottom_left.tabuSearch(true, 30, 55); //small instances, short time
+    bottom_left.tabuSearch(true, 30, 145); //small instances, long time
+    bottom_left.tabuSearch(true, 30, 35); //big instances, short time
+    bottom_left.tabuSearch(true, 30, 115); //big instances, long time
+    bottom_left.tabuSearch(false, 30, 13); //short time
+    bottom_left.tabuSearch(false, 30, 20); //long time
 }
 
 void computePortfolio(vector<pll> instances) {

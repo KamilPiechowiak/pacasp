@@ -1,18 +1,8 @@
 #include"shelf.hpp"
 
-string Shelf::pref;
-ll Shelf::maxTime;
-ll Shelf::w;
-vector<Rectangle> Shelf::rr;
-vector<pll> Shelf::placement;
-
-void Shelf::init(ll _w, vector<Rectangle> &_rr, ll _maxTime) {
-    w = _w;
-    rr = _rr;
-    maxTime = 1000000LL*_maxTime;
-    int n = rr.size();
-    placement.resize(n);
-    pref = "Shelf-";
+Shelf::Shelf(ll w, vector<Rectangle> &rr, Recorder &recorder) : w(w), rr(rr), recorder(recorder) {
+    placement.resize(SIZE(rr));
+    pref="SH-";
 }
 
 void Shelf::saveImg(string name, ll height, vector<Rectangle> &rect) {
@@ -76,8 +66,7 @@ ll Shelf::genericGreedy(ggOrder order, ggShelf shelf, bool rotateShelves) {
     if(rotateShelves) {
         name+= "_rotated";
     }
-    openLog(name);
-    startTimer();
+    recorder.open_log("SH" + name);
     vector<Rectangle> rect = rr;
     function<bool(const Rectangle&, const Rectangle&)> f;
     if(order == heightAsc) {
@@ -180,8 +169,8 @@ ll Shelf::genericGreedy(ggOrder order, ggShelf shelf, bool rotateShelves) {
             rect.pop_back();
         }
     }
-    bestHeight = currentHeight;
-    record();
+    ll bestHeight = currentHeight;
+    recorder.record(bestHeight);
     saveImg(name, currentHeight, rect);
     return currentHeight;
 }
@@ -322,15 +311,14 @@ void Shelf::draw(string name, vector<int> &ord, vector<vector<int>> &levels, vec
 }
 
 ll Shelf::hillClimber() {
-    openLog("SHhillClimber");
-    startTimer();
+    recorder.open_log("SHhillClimber");
     vector<Rectangle> rect = rr;
     vector<vector<int>> levels = getBFDHLevels(rect);
     vector<vector<ll>> d = compress(rect, levels);
     auto x = getOrder(d, levels.size());
     vector<int> ord = x.first;
-    bestHeight = x.second;
-    record();
+    ll bestHeight = x.second;
+    recorder.record(bestHeight);
     while(true) {
         int dh=0;
         for(int i=0; i < (int)ord.size(); i+=2) {
@@ -340,8 +328,7 @@ ll Shelf::hillClimber() {
                     dh+=x.second;
                     swap(ord[i], ord[j]);
                 }
-                ll ti = getTime();
-                if(ti > maxTime) {
+                if(recorder.should_finish()) {
                     i = ord.size();
                     j = ord.size();
                     break;
@@ -352,7 +339,7 @@ ll Shelf::hillClimber() {
             break;
         }
         bestHeight+=dh;
-        record();
+        recorder.record(bestHeight);
 
     }
     draw("hillClimber", ord, levels, rect, d);
@@ -369,7 +356,7 @@ ll Shelf::simulatedAnnealing() {
     vector<int> ord = x.first;
     ll currentHeight = x.second;
     vector<int> best = ord;
-    bestHeight = currentHeight;
+    ll bestHeight = currentHeight;
 
     double T = 1000.0*currentHeight;
     double mult = 0.9;
@@ -388,8 +375,7 @@ ll Shelf::simulatedAnnealing() {
             bestHeight = currentHeight;
         }
         if(i%10 == 0) {
-            ll ti = ::getTime(tStart);
-            if(ti > maxTime) {
+            if(recorder.should_finish()) {
                 break;
             }
             T*=mult;
@@ -402,8 +388,7 @@ ll Shelf::simulatedAnnealing() {
 }
 
 ll Shelf::simulatedAnnealing2(double mult0, int maxNumberOfAccepted, int maxNumberOfIterations) {
-    openLog("SHsa_" + to_string(mult0) + "_" + to_string(maxNumberOfAccepted) + "_" + to_string(maxNumberOfIterations));
-    startTimer();
+    recorder.open_log("SHsa_" + to_string(mult0) + "_" + to_string(maxNumberOfAccepted) + "_" + to_string(maxNumberOfIterations));
     
     vector<Rectangle> rect = rr;
     vector<vector<int>> levels = getBFDHLevels(rect);
@@ -412,8 +397,8 @@ ll Shelf::simulatedAnnealing2(double mult0, int maxNumberOfAccepted, int maxNumb
     vector<int> ord = x.first;
     ll currentHeight = x.second;
     vector<int> best = ord;
-    bestHeight = currentHeight;
-    record();
+    ll bestHeight = currentHeight;
+    recorder.record(bestHeight);
     ll initialHeight = currentHeight;
 
     double T = 1000.0;
@@ -437,7 +422,7 @@ ll Shelf::simulatedAnnealing2(double mult0, int maxNumberOfAccepted, int maxNumb
         if(currentHeight < bestHeight) {
             best = ord;
             bestHeight = currentHeight;
-            record();
+            recorder.record(bestHeight);
         }
         if(numberOfAccepted >= maxNumberOfAccepted) {
             // cerr << "DEC\n";
@@ -452,8 +437,7 @@ ll Shelf::simulatedAnnealing2(double mult0, int maxNumberOfAccepted, int maxNumb
             numberOfAccepted=0;
         }
         if(i%10 == 0) {
-            ll ti = getTime();
-            if(ti > maxTime) {
+            if(recorder.should_finish()) {
                 break;
             }
         }

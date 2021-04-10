@@ -2,6 +2,7 @@
 #define PARALLEL_HPP
 
 #include"general/general.hpp"
+#include"general/rectangle.hpp"
 
 struct Parallel {
 protected:
@@ -9,6 +10,8 @@ protected:
     int nodeId;
     ll maxTime;
     string filename;
+    vector<Rectangle> rect;
+    ll w;
 public:
     Parallel(ll maxTime);
     ~Parallel();

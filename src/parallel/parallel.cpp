@@ -19,20 +19,13 @@ void Parallel::destroy() {
 }
 
 void Parallel::loadData() {
-    vector<Rectangle> rect;
     ifstream f;
     f.open(filename);
-    int n; ll w;
+    int n;
     f >> n >> w;
     for(int i=0; i < n; i++) {
         ll a, b;
         f >> a >> b;
         rect.push_back(Rectangle(a, b, i));
     }
-    Recordable::setInstanceId(nodeId);
-    // cerr << maxTime << "\n";
-    BottomLeft::init(w, rect, maxTime);
-    Shelf::init(w, rect, maxTime);
-    Bounds::byArea(w, rect);
-    Bounds::byWiderThanHalf(w, rect);
 }
