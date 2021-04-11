@@ -11,7 +11,7 @@ sizes = sizes.reshape(instancesPerTimePerSize, -1)
 sizes = np.swapaxes(sizes, 0, 1)
 sizes = sizes.flatten()
 
-path = os.path.abspath(os.path.join(os.path.pardir, 'tuning'))
+path = "tuning"
 files = os.listdir(path)
 
 possibilites = set()
@@ -57,12 +57,13 @@ def instances_group(a, t, s):
 
 def single_algorithm(a):
     instances_group(a, (0, 9), (0, 8))
-    instances_group(a, (0, 5), (0, 4))
-    instances_group(a, (0, 5), (4, 8))
-    instances_group(a, (5, 9), (0, 4))
-    instances_group(a, (5, 9), (4, 8))
+    # instances_group(a, (0, 5), (0, 4))
+    # instances_group(a, (0, 5), (4, 8))
+    # instances_group(a, (5, 9), (0, 4))
+    # instances_group(a, (5, 9), (4, 8))
 
-algorithms = ["BLmls", "BLsa", "BLts", "BLts2", "SHsa", "graspBldh", "graspBldw", "graspBlda"]
+# algorithms = ["BLsa", "BLts", "BLts2", "SHsa", "graspBldh", "graspBldw", "graspBlda"]
+algorithms = ["BLmls", "BLils", "SKts_1", "SKts_0", "SKsa", "SKmls", "SKils"]
 for a in algorithms:
     single_algorithm(a)
 

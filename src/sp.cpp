@@ -16,6 +16,9 @@ void showAll(ll w, vector<Rectangle> &rect, ll maxTime) {
     BottomLeft bottom_left(w, rect, recorder);
     Skyline skyline(w, rect, recorder);
 
+    cout << max(bounds.byArea(), bounds.byWiderThanHalf()) << "\n";
+    return;
+
     vector<ll> v = {
         bounds.byArea(),    
         bounds.byWiderThanHalf()                                                                                                                                                                                                                                                                                    ,
@@ -39,7 +42,7 @@ void showAll(ll w, vector<Rectangle> &rect, ll maxTime) {
     for(ll r : v) {
         cout << r << "\n";
     }
-    return;
+    
 
     bounds.byArea();
     bounds.byWiderThanHalf();
@@ -100,11 +103,12 @@ void defaultProcessing() {
     vector<Rectangle> rect;
     int n;
     ll w;
-    cin >> n >> w;
+    ll lb;
+    cin >> w >> lb >> n;
     ImgSaver::init(n);
     for(int i=0; i < n; i++) {
-        ll id, a, b;
-        cin >> id >> a >> b;
+        ll a, b;
+        cin >> a >> b;
         rect.push_back(Rectangle(a, b, i));
     }
     showAll(w, rect, 2000);

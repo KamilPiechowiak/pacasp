@@ -15,7 +15,7 @@ void Tuner::generateInstance() {
 }
 
 void Tuner::getResults() {
-    Recorder recorder("tune", nodeId, maxTime);
+    Recorder recorder("tune", instanceId, maxTime);
     BottomLeft bottom_left(w, rect, recorder);
     Shelf shelf(w, rect, recorder);
     Skyline skyline(w, rect, recorder);
@@ -112,7 +112,8 @@ void Tuner::tune() {
     // sizes = {125};
     // instancesPerTimePerSize = 2;
     // actions = {_tabuSearch2};
-    // assert(SIZE(sizes)*instancesPerTimePerSize*SIZE(actions) == numberOfNodes);
+    assert(SIZE(sizes)*instancesPerTimePerSize*SIZE(actions) == numberOfNodes);
+    // cerr << SIZE(sizes)*instancesPerTimePerSize*SIZE(actions) << " " << numberOfNodes << "\n";
 
     // for(int s : sizes) {
     //     for(int i=0; i < instancesPerTimePerSize; i++) {
@@ -122,7 +123,8 @@ void Tuner::tune() {
 
     // generateInstance();
     int totalInstances = SIZE(sizes)*instancesPerTimePerSize;
-    filename = "used_instances/tuning_instances/" + to_string(nodeId%totalInstances) + string(".in");
+    instanceId = nodeId%totalInstances;
+    filename = "used_instances/tuning_instances/" + to_string(instanceId) + string(".in");
     loadData();
     ActionType a = actions[nodeId/totalInstances];
     if(m[a].size() > 2) {

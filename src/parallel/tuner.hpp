@@ -36,6 +36,7 @@ private:
     vector<double> par;
     int steps = 4;
     vector<int> instanceSize;
+    int instanceId;
 public:
     Tuner(ll maxTime);
     void run();

@@ -6,7 +6,7 @@
 #SBATCH --ntasks=560
 #SBATCH -p standard
 
-TMPDIR=/tmp/lustre_shared/$USER/$SLURM_JOBID
+TMPDIR=/tmp/lustre/$USER/$SLURM_JOBID
 mkdir -p $TMPDIR
 cd $TMPDIR
 mkdir -p instances

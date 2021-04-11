@@ -22,7 +22,8 @@ void Parallel::loadData() {
     ifstream f;
     f.open(filename);
     int n;
-    f >> n >> w;
+    ll lb;
+    f >> w >> lb >> n;
     for(int i=0; i < n; i++) {
         ll a, b;
         f >> a >> b;

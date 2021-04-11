@@ -18,7 +18,7 @@ ll SkylinePacking::run(vector<int> &ord) {
         return pll(get<0>(a), get<1>(a)) < pll(get<0>(b), get<1>(b));
     };
     set<SegmentData, function<bool (const SegmentData&, const SegmentData&)>> lowest_segment(cmp); //y, x, iterator
-    lowest_segment.insert({0, 0, skyline.begin()});
+    lowest_segment.insert(make_tuple(0, 0, skyline.begin()));
     ll totalHeight = 0;
     // for(auto a : skyline) {
     //     fprintf(stderr, "%lld,%lld\n", a.left, a.right);
@@ -57,7 +57,7 @@ ll SkylinePacking::run(vector<int> &ord) {
             if(selected_segment.left_height == selected_segment.right_height) {
                 it++;
                 ll current_right = it->right;
-                lowest_segment.erase({it->height, it->left, it});
+                lowest_segment.erase(make_tuple(it->height, it->left, it));
                 skyline.erase(it--);
                 skyline.erase(it--);
                 it->right = current_right;
@@ -68,9 +68,9 @@ ll SkylinePacking::run(vector<int> &ord) {
             } else {
                 ll current_left = it->left;
                 skyline.erase(it++);
-                lowest_segment.erase({it->height, it->left, it});
+                lowest_segment.erase(make_tuple(it->height, it->left, it));
                 it->left = current_left;
-                lowest_segment.insert({it->height, it->left, it});
+                lowest_segment.insert(make_tuple(it->height, it->left, it));
             }
         } else {
             // fprintf(stderr, "%lld,%lld,%lld", it->left, it->right, it->height);
@@ -89,11 +89,11 @@ ll SkylinePacking::run(vector<int> &ord) {
                 it->height+=r.height;
             } else if(rectangle_placement.left) {
                 it->left+=r.width;
-                lowest_segment.insert({it->height, it->left, it});
+                lowest_segment.insert(make_tuple(it->height, it->left, it));
                 it = skyline.insert(it, SkylineSegment(it->left-r.width, it->left-1, it->height+r.height));
             } else {
                 it->right-=r.width;
-                lowest_segment.insert({it->height, it->left, it});
+                lowest_segment.insert(make_tuple(it->height, it->left, it));
                 SkylineSegment new_segment = SkylineSegment(it->right+1, it->right+r.width, it->height+r.height);
                 it++;
                 it = skyline.insert(it, new_segment);
@@ -102,7 +102,7 @@ ll SkylinePacking::run(vector<int> &ord) {
             SkylineSegment &current_segment = *it;
             it++;
             if(it != skyline.end() && current_segment.height == it->height) {
-                lowest_segment.erase({it->height, it->left, it});
+                lowest_segment.erase(make_tuple(it->height, it->left, it));
                 current_segment.right = it->right;
                 skyline.erase(it--);
             } else {
@@ -116,10 +116,10 @@ ll SkylinePacking::run(vector<int> &ord) {
                     skyline.erase(it);
                 } else {
                     it++;
-                    lowest_segment.insert({it->height, it->left, it});
+                    lowest_segment.insert(make_tuple(it->height, it->left, it));
                 }
             } else {
-                lowest_segment.insert({it->height, it->left, it});
+                lowest_segment.insert(make_tuple(it->height, it->left, it));
             }
         }
         #if DEBUG

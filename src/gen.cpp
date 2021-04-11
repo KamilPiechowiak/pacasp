@@ -1,4 +1,6 @@
 #include<bits/stdc++.h>
+#include"algorithms/bounds.hpp"
+#include"algorithms/recorder.hpp"
 
 using namespace std;
 typedef pair<double, double> pdd;
@@ -37,7 +39,9 @@ struct Type {
         if(id == (int)F.size()) {
             id--;
         }
-        cout << ri(1, (int)F[id].width) << " " << ri(1, (int)F[id].height) << endl;
+        int h = ri(1, (int)F[id].height);
+        int w = ri(1, (int)F[id].width);
+        cout << w << " " <<  h << endl;
     }
 };
 
