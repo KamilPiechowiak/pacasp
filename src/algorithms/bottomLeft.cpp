@@ -117,9 +117,9 @@ ll BottomLeft::graspBlda(int bufferSize) {
     return graspBlds(bufferSize, Rectangle::cmpByHeight, "graspBlda");
 }
 
-ll BottomLeft::hillClimber() {
-    recorder.open_log("BLhc");
-    HillClimber hill_climber(recorder);
+ll BottomLeft::hillClimber(bool greedy) {
+    recorder.open_log("BLhc_" + to_string(greedy));
+    HillClimber hill_climber(recorder, greedy);
     vector<int> ord = getRandomOrder();
     // sort(ord.begin(), ord.end(), [&](const int &a, const int &b) {return rect[a].width*rect[a].height > rect[b].width*rect[b].height; });
     return hill_climber.run(&bottom_left_packing, ord);

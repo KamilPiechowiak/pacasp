@@ -100,13 +100,13 @@ void Tuner::tune() {
     int instancesPerTimePerSize = 10;
     // vector<ActionType> actions = {_simulatedAnnealing, _tabuSearch, _tabuSearch2, _shelfSimulatedAnnealing, _graspBldw, _graspBldh, _graspBlda};
     vector<ActionType> actions = {
-        _BLmultiStartLocalSearch,
-        _BLiteratedLocalSearch,
+        // _BLmultiStartLocalSearch,
+        // _BLiteratedLocalSearch,
         _SKsimulatedAnnealing,
         _SKmultiStartLocalSearch,
         _SKtabuSearch_ord_hash,
         _SKtabuSearch_move_hash,
-        _SKiteratedLocalSearch
+        // _SKiteratedLocalSearch
     };
 
     // sizes = {125};
@@ -124,7 +124,7 @@ void Tuner::tune() {
     // generateInstance();
     int totalInstances = SIZE(sizes)*instancesPerTimePerSize;
     instanceId = nodeId%totalInstances;
-    filename = "used_instances/tuning_instances/" + to_string(instanceId) + string(".in");
+    filename = "used_instances/tuning_new_format/" + to_string(instanceId) + string(".in");
     loadData();
     ActionType a = actions[nodeId/totalInstances];
     if(m[a].size() > 2) {

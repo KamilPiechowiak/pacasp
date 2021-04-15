@@ -24,7 +24,7 @@ public:
     ll burke();
     ll ish();
     ll tabuSearch(bool hash_from_order=false, int tabu_length=30, int number_of_neighbors=100);
-    ll hillClimber();
+    ll hillClimber(bool greedy=false);
     ll simulatedAnnealing(double mult=0.9, int max_number_of_accepted=2, int max_number_of_rejected=20);
     ll multiStartLocalSearch(int number_of_neighbors = 100);
     ll iteratedLocalSearch(int number_of_neighbors=100, int perturbation_inversed_intensity=10);

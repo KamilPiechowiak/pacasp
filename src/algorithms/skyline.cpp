@@ -56,6 +56,7 @@ ll Skyline::ish() {
 
     ISHScoreRule scoreRule;
     // ISHBruteScoreRule scoreRule;
+    skyline_packing->setScoreRule(&scoreRule);
     vector<pair<ll, int>> resulting_heights;
     ll bestHeight = LL_INF;
     for(int i=0; i < SIZE(sorting_rules); i++) {
@@ -67,13 +68,13 @@ ll Skyline::ish() {
             recorder.record(bestHeight);
         }
         resulting_heights.push_back({height, i});
-        return bestHeight;
         // for(int id : ord) {
         //     printf("%d,",id);
         // }
         // printf("\n%lld,%d\n", height, i);
     }
     sort(resulting_heights.begin(), resulting_heights.end());
+    // cout << resulting_heights[0].second << "\n";
     while(true) {
         for(auto height_id : resulting_heights) {
             sort(ord.begin(), ord.end(), sorting_rules[height_id.second]);
@@ -115,17 +116,17 @@ ll Skyline::tabuSearch(bool hash_from_order, int tabu_length, int number_of_neig
     skyline_packing->setScoreRule(&scoreRule);
     TabuSearch tabu_search(tabu_length, number_of_neighbors, recorder, hash_from_order);
     vector<int> ord = getOrder();
-    sort(ord.begin(), ord.end(), [&](const int &a, const int &b) {return rect[a].width*rect[a].height > rect[b].width*rect[b].height; });
+    sort(ord.begin(), ord.end(), [&](const int &a, const int &b) {return rect[a].width > rect[b].width; });
     return tabu_search.run(skyline_packing, ord);
 }
 
-ll Skyline::hillClimber() {
-    recorder.open_log("SKhc");
+ll Skyline::hillClimber(bool greedy) {
+    recorder.open_log("SKhc_" + to_string(greedy));
     ISHScoreRule scoreRule;
     skyline_packing->setScoreRule(&scoreRule);
-    HillClimber hill_climber(recorder);
+    HillClimber hill_climber(recorder, greedy);
     vector<int> ord = getOrder();
-    sort(ord.begin(), ord.end(), [&](const int &a, const int &b) {return rect[a].width*rect[a].height > rect[b].width*rect[b].height; });
+    sort(ord.begin(), ord.end(), [&](const int &a, const int &b) {return rect[a].width > rect[b].width; });
     return hill_climber.run(skyline_packing, ord);
 }
 
@@ -135,7 +136,7 @@ ll Skyline::simulatedAnnealing(double mult, int max_number_of_accepted, int max_
     skyline_packing->setScoreRule(&scoreRule);
     SimulatedAnnealing simulated_annealing(mult, max_number_of_accepted, max_number_of_rejected, recorder);
     vector<int> ord = getOrder();
-    sort(ord.begin(), ord.end(), [&](const int &a, const int &b) {return rect[a].width*rect[a].height > rect[b].width*rect[b].height; });
+    sort(ord.begin(), ord.end(), [&](const int &a, const int &b) {return rect[a].width > rect[b].width; });
     return simulated_annealing.run(skyline_packing, ord);
 }
 
@@ -145,7 +146,7 @@ ll Skyline::multiStartLocalSearch(int number_of_neighbors) {
     skyline_packing->setScoreRule(&scoreRule);
     IteratedLocalSearch iterated_local_search(number_of_neighbors, 0, recorder);
     vector<int> ord = getOrder();
-    sort(ord.begin(), ord.end(), [&](const int &a, const int &b) {return rect[a].width*rect[a].height > rect[b].width*rect[b].height; });
+    sort(ord.begin(), ord.end(), [&](const int &a, const int &b) {return rect[a].width > rect[b].width; });
     return iterated_local_search.run(skyline_packing, ord);
 }
 
@@ -155,6 +156,6 @@ ll Skyline::iteratedLocalSearch(int number_of_neighbors, int perturbation_invers
     skyline_packing->setScoreRule(&scoreRule);
     IteratedLocalSearch iterated_local_search(number_of_neighbors, perturbation_inversed_intensity, recorder);
     vector<int> ord = getOrder();
-    sort(ord.begin(), ord.end(), [&](const int &a, const int &b) {return rect[a].width*rect[a].height > rect[b].width*rect[b].height; });
+    sort(ord.begin(), ord.end(), [&](const int &a, const int &b) {return rect[a].width > rect[b].width; });
     return iterated_local_search.run(skyline_packing, ord);
 }

@@ -8,9 +8,10 @@
 class HillClimber {
 private:
     Recorder &recorder;
+    bool greedy;
     Neighborhood *neighborhood;
 public:
-    HillClimber(Recorder &recorder, Neighborhood *neighborhood=NULL);
+    HillClimber(Recorder &recorder, bool greedy=false, Neighborhood *neighborhood=NULL);
     ll run(PackingAlgorithm *packing_algorithm, vector<int> &ord);
 };
 
