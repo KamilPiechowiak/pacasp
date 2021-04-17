@@ -31,11 +31,6 @@ ll IteratedLocalSearch::run(PackingAlgorithm *packing_algorithm, vector<int> &or
             }
         }
         if(candidate_height >= current_height) { //perturbate
-            if(current_height < best_height) {
-                best_height = current_height;
-                best_ord = ord;
-                recorder.record(best_height);
-            }
             if(perturbation_inversed_intensity == 0) {
                 random_shuffle(ord.begin(), ord.end());
             } else {
@@ -49,6 +44,11 @@ ll IteratedLocalSearch::run(PackingAlgorithm *packing_algorithm, vector<int> &or
         } else {
             current_height = candidate_height;
             ord = candidate_ord;
+            if(current_height < best_height) {
+                best_height = current_height;
+                best_ord = ord;
+                recorder.record(best_height);
+            }
         }
     }
     cerr << iter << "\n";
