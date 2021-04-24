@@ -10,20 +10,31 @@ ll HillClimber::run(PackingAlgorithm *packing_algorithm, vector<int> &ord) {
     ll best_height = packing_algorithm->run(ord);
     recorder.record(best_height);
     int iter=0;
-    int neighborhood_size = neighborhood->get_size();
-    vector<int> permutation(neighborhood_size);
-    for(int i=0; i < neighborhood_size; i++) {
-        permutation[i] = i;
+    ll neighborhood_size = neighborhood->get_size();
+    if(neighborhood_size <= 1000000) {
+        permutation.resize(neighborhood_size);
+        for(int i=0; i < neighborhood_size; i++) {
+            permutation[i] = i;
+        }
+        random_shuffle(permutation.begin(), permutation.end());
+    } else {
+        permutation.clear();
     }
-    random_shuffle(permutation.begin(), permutation.end());
+    
     while(!recorder.should_finish()) {
+        cerr << iter << "\n";
         iter++;
         vector<int> best_neigh;
         ll current_height = best_height;
-        int start = ri(0, neighborhood_size-1);
-        int j = start;
+        ll start = rll(0, neighborhood_size-1);
+        ll j = start;
         while(true) {
-            int i = permutation[j];
+            ll i;
+            if(j < SIZE(permutation)) {
+                i = permutation[j];
+            } else {
+                i = rll(0, neighborhood_size-1);
+            }
             if(neighborhood->apply(i, ord)) {
                 ll height = packing_algorithm->run(ord);
                 if(height < current_height) {

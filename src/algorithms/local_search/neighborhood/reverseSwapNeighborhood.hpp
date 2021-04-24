@@ -8,13 +8,13 @@
 class ReverseSwapNeighborhood : public virtual Neighborhood {
 private:
     int n;
-    int swap_size;
+    ll swap_size;
     ReverseNeighborhood reverse_neighborhood;
     SwapNeighborhood swap_neighborhood;
 public:
     ReverseSwapNeighborhood(int n);
-    int get_size();
-    bool apply(int state, vector<int> &ord);
+    ll get_size();
+    bool apply(ll state, vector<int> &ord);
 };
 
 #endif

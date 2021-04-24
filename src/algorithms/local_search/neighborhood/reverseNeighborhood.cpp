@@ -2,11 +2,11 @@
 
 ReverseNeighborhood::ReverseNeighborhood(int n) : n(n) {}
 
-int ReverseNeighborhood::get_size() {
-    return n*(n-1);
+ll ReverseNeighborhood::get_size() {
+    return ll(n)*ll(n-1);
 }
 
-bool ReverseNeighborhood::apply(int state, vector<int> &ord) {
+bool ReverseNeighborhood::apply(ll state, vector<int> &ord) {
     int a = state/(n-1);
     int b = state%(n-1);
     if(b >= a) {

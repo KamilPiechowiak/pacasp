@@ -13,6 +13,7 @@ typedef pair<ll, ll> pll;
 typedef pair<double, double> pdd;
 
 int ri(int a, int b);
+ll rll(ll a, ll b);
 double rd(double a, double b);
 ll getTime(chrono::system_clock::time_point tStart);
 ll perimeter(ll x, ll y);

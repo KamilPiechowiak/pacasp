@@ -2,11 +2,11 @@
 
 SwapNeighborhood::SwapNeighborhood(int n) : n(n) {}
 
-int SwapNeighborhood::get_size() {
-    return n*(n-1);
+ll SwapNeighborhood::get_size() {
+    return ll(n)*ll(n-1);
 }
 
-bool SwapNeighborhood::apply(int state, vector<int> &ord) {
+bool SwapNeighborhood::apply(ll state, vector<int> &ord) {
     int a = state/(n-1);
     int b = state%(n-1);
     if(b >= a) {

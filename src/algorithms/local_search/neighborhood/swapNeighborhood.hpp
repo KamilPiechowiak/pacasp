@@ -8,8 +8,8 @@ private:
     int n;
 public:
     SwapNeighborhood(int n);
-    int get_size();
-    bool apply(int state, vector<int> &ord);
+    ll get_size();
+    bool apply(ll state, vector<int> &ord);
 };
 
 #endif

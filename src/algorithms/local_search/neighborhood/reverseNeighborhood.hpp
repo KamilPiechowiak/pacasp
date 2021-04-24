@@ -8,8 +8,8 @@ private:
     int n;
 public:
     ReverseNeighborhood(int n);
-    int get_size();
-    bool apply(int state, vector<int> &ord);
+    ll get_size();
+    bool apply(ll state, vector<int> &ord);
 };
 
 #endif

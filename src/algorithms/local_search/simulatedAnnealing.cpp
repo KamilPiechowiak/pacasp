@@ -21,7 +21,7 @@ ll SimulatedAnnealing::run(PackingAlgorithm *packing_algorithm, vector<int> &ord
     int numberOfIterations=0;
     while(!recorder.should_finish()) {
         iter++;
-        int state = neighborhood->next_random(ord);
+        ll state = neighborhood->next_random(ord);
         ll height = packing_algorithm->run(ord);
         double df = (height-current_height)/double(initial_height);
         numberOfIterations++;

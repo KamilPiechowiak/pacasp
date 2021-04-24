@@ -51,8 +51,8 @@ ll TabuSearch::run(PackingAlgorithm *packing_algorithm, vector<int> &ord) {
         ll candidate_height = LL_INF;
         ll candidate_hash = 0;
         for(int i=0; i < number_of_neighbors; i++) {
-            int state = neighborhood->next_random(ord);
-            int state_hash;
+            ll state = neighborhood->next_random(ord);
+            ll state_hash;
             if(hash_from_order) {
                 state_hash = get_hash(ord);
             } else {

@@ -5,11 +5,11 @@ ReverseSwapNeighborhood::ReverseSwapNeighborhood(int n) :
     swap_size = swap_neighborhood.get_size();
 }
 
-int ReverseSwapNeighborhood::get_size() {
+ll ReverseSwapNeighborhood::get_size() {
     return reverse_neighborhood.get_size() + swap_neighborhood.get_size();
 }
 
-bool ReverseSwapNeighborhood::apply(int state, vector<int> &ord) {
+bool ReverseSwapNeighborhood::apply(ll state, vector<int> &ord) {
     if(state >= swap_size) {
         state-=swap_size;
         return reverse_neighborhood.apply(state, ord);

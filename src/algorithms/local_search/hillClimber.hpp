@@ -10,6 +10,7 @@ private:
     Recorder &recorder;
     bool greedy;
     Neighborhood *neighborhood;
+    vector<int> permutation;
 public:
     HillClimber(Recorder &recorder, bool greedy=false, Neighborhood *neighborhood=NULL);
     ll run(PackingAlgorithm *packing_algorithm, vector<int> &ord);

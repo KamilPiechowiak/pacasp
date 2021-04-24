@@ -11,6 +11,11 @@ int ri(int a, int b) {
     return d(gen);
 }
 
+ll rll(ll a, ll b) {
+    uniform_int_distribution<ll> d(a, b);
+    return d(gen);
+}
+
 double rd(double a, double b) {
     uniform_real_distribution<> d(a, b);
     return d(gen);

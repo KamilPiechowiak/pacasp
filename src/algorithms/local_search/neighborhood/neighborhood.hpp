@@ -5,9 +5,9 @@
 
 class Neighborhood {
 public:
-    virtual int get_size() =0;
-    virtual bool apply(int state, vector<int> &ord) =0;
-    int next_random(vector<int> &ord);
+    virtual ll get_size() =0;
+    virtual bool apply(ll state, vector<int> &ord) =0;
+    ll next_random(vector<int> &ord);
 };
 
 #endif

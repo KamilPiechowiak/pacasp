@@ -9,7 +9,7 @@ greedyAlgorithms = portfolio.getGreedyAlgorithms()
 timePoints = portfolio.getTimePoints()
 n = timePoints.size
 
-instances = [i for i in range(1000, 2207)]
+instances = [i for i in range(1000, 1999)]
 
 portfolioNames = [(x, []) for x in portfolio.getNames()]
 portfolioNames+= [

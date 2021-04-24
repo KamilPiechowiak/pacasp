@@ -19,7 +19,7 @@ ll IteratedLocalSearch::run(PackingAlgorithm *packing_algorithm, vector<int> &or
         vector<int> candidate_ord;
         ll candidate_height = LL_INF;
         for(int i=0; i < number_of_neighbors; i++) {
-            int state = neighborhood->next_random(ord);
+            ll state = neighborhood->next_random(ord);
             ll height = packing_algorithm->run(ord);
             if(height < candidate_height) {
                 candidate_height = height;

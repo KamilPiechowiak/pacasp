@@ -20,6 +20,7 @@ void Parallel::destroy() {
 
 void Parallel::loadData() {
     ifstream f;
+    cerr << filename << "\n";
     f.open(filename);
     int n;
     ll lb;

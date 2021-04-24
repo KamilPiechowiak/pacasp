@@ -16,33 +16,27 @@ void showAll(ll w, vector<Rectangle> &rect, ll maxTime) {
     BottomLeft bottom_left(w, rect, recorder);
     Skyline skyline(w, rect, recorder);
 
-    cout << max(bounds.byArea(), bounds.byWiderThanHalf()) << "\n";
-    // cout << skyline.ish() << "\n";
-    cout << skyline.hillClimber(1) << "\n";
-    cout << skyline.hillClimber(0);
-    return;
-
     vector<ll> v = {
         bounds.byArea(),    
         bounds.byWiderThanHalf()                                                                                                                                                                                                                                                                                    ,
-        // skyline.burke(),
-        // skyline.ish(),
-        // skyline.tabuSearch(),
-        // skyline.tabuSearch(12, 10),
-        // skyline.tabuSearch(),
+        skyline.burke(),
+        skyline.ish(),
+        skyline.tabuSearch(true),
+        skyline.tabuSearch(false),
         skyline.hillClimber(),
         skyline.hillClimber(true),
-        // skyline.simulatedAnnealing(),
-        // skyline.multiStartLocalSearch(),
-        // skyline.iteratedLocalSearch(),
-        // bottom_left.tabuSearch(30, 55),
+        skyline.simulatedAnnealing(),
+        skyline.multiStartLocalSearch(),
+        skyline.iteratedLocalSearch(),
+        bottom_left.tabuSearch(30, 55),
         bottom_left.hillClimber(),
         bottom_left.hillClimber(true),
-        // bottom_left.simulatedAnnealing(),
-        // bottom_left.tabuSearch(),
-        // bottom_left.iteratedLocalSearch(),
-        // bottom_left.multiStartLocalSearch(),
-        // shelf.simulatedAnnealing2(0.8, 1, 45)
+        bottom_left.simulatedAnnealing(),
+        bottom_left.tabuSearch(true),
+        bottom_left.tabuSearch(false),
+        bottom_left.iteratedLocalSearch(),
+        bottom_left.multiStartLocalSearch(),
+        shelf.simulatedAnnealing2(0.8, 1, 45)
     };
     for(ll r : v) {
         cout << r << "\n";
@@ -102,7 +96,8 @@ void localMinCost() {
     // computePortfolio({{500, 999}});
     // computePortfolio({{700, 999}});
     // computePortfolio({{1000, 1999}});
-    computePortfolio({{1000, 2206}});
+    computePortfolio({{3094, 3263}});
+    computePortfolio({{3215, 3263}});
 }
 
 void defaultProcessing() {

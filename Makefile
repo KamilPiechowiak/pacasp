@@ -1,5 +1,5 @@
 CC = mpic++
-CFLAGS = -Wall -Wunused -Wextra -std=c++11 -O3 -I src
+CFLAGS = -Wall -Wunused -Wextra -std=c++11 -O3 -g -I src
 LIBS = `Magick++-config --cxxflags --cppflags --ldflags --libs`
 
 SRCS_WITH_PREFIX = $(shell find src | egrep "\.cpp" | egrep -v gen.cpp)

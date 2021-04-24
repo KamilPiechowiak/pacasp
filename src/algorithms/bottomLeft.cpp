@@ -55,7 +55,9 @@ ll BottomLeft::blds(function<bool(const Rectangle &a, const Rectangle &b)> sorti
     if(reverseOrder) {
         reverse(ord.begin(), ord.end());
     }
-    return bottom_left_packing.run_and_save(name, ord);
+    ll best_height = bottom_left_packing.run_and_save(name, ord);
+    recorder.record(best_height);
+    return best_height;
 }
 
 ll BottomLeft::bldw() {
