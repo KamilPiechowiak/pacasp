@@ -136,7 +136,7 @@ void Tuner::tune() {
     rec(0, m[defaultAction]);
 }
 
-void Tuner::run() {
+void Tuner::run(json config) {
     tune();
     destroy();
 }

@@ -7,6 +7,7 @@
 #include"parallel/runner.hpp"
 #include"parallel/tuner.hpp"
 #include"parallel/portfolio.hpp"
+#include"parallel/validator.hpp"
 
 void showAll(ll w, vector<Rectangle> &rect, ll maxTime) {
     Recorder recorder("out_local", 0, maxTime);
@@ -16,27 +17,30 @@ void showAll(ll w, vector<Rectangle> &rect, ll maxTime) {
     BottomLeft bottom_left(w, rect, recorder);
     Skyline skyline(w, rect, recorder);
 
+    cout << max(bounds.byArea(), bounds.byWiderThanHalf()) << "\n";\
+    return;
+
     vector<ll> v = {
         bounds.byArea(),    
         bounds.byWiderThanHalf()                                                                                                                                                                                                                                                                                    ,
-        skyline.burke(),
-        skyline.ish(),
-        skyline.tabuSearch(true),
-        skyline.tabuSearch(false),
-        skyline.hillClimber(),
-        skyline.hillClimber(true),
-        skyline.simulatedAnnealing(),
-        skyline.multiStartLocalSearch(),
-        skyline.iteratedLocalSearch(),
-        bottom_left.tabuSearch(30, 55),
-        bottom_left.hillClimber(),
-        bottom_left.hillClimber(true),
-        bottom_left.simulatedAnnealing(),
-        bottom_left.tabuSearch(true),
-        bottom_left.tabuSearch(false),
-        bottom_left.iteratedLocalSearch(),
-        bottom_left.multiStartLocalSearch(),
-        shelf.simulatedAnnealing2(0.8, 1, 45)
+        // skyline.burke(),
+        // skyline.ish(),
+        // skyline.tabuSearch(true),
+        // skyline.tabuSearch(false),
+        // skyline.hillClimber(),
+        // skyline.hillClimber(true),
+        // skyline.simulatedAnnealing(),
+        // skyline.multiStartLocalSearch(),
+        // skyline.iteratedLocalSearch(),
+        // bottom_left.tabuSearch(30, 55),
+        // bottom_left.hillClimber(),
+        // bottom_left.hillClimber(true),
+        // bottom_left.simulatedAnnealing(),
+        // bottom_left.tabuSearch(true),
+        // bottom_left.tabuSearch(false),
+        // bottom_left.iteratedLocalSearch(),
+        // bottom_left.multiStartLocalSearch(),
+        // shelf.simulatedAnnealing2(0.8, 1, 45)
     };
     for(ll r : v) {
         cout << r << "\n";
@@ -106,6 +110,7 @@ void defaultProcessing() {
     ll w;
     ll lb;
     cin >> w >> lb >> n;
+    // cin >> n >> w;
     ImgSaver::init(n);
     for(int i=0; i < n; i++) {
         ll a, b;
@@ -119,17 +124,26 @@ int main(int argc, char *argv[]) {
     ios_base::sync_with_stdio(0);
     setSeed(13);
     string option = "default";
-    if(argc == 2) {
+    if(argc >= 2) {
         option = string(argv[1]);
+    }
+    json config;
+    if(argc >= 3) {
+        ifstream file(argv[2]);
+        file >> config;
+        file.close();
     }
     if(option == "portfolio") {
         localMinCost();
     } else if(option == "run") {
-        Runner r(1000*60*60);
-        r.run();
+        Runner r(config["max_time"]);
+        r.run(config);
     } else if(option == "tune") {
-        Tuner t(1000*60*4);
-        t.run();
+        Tuner t(config["max_time"]);
+        t.run(config);
+    } else if(option == "validate") {
+        Validator v(config["max_time"]);
+        v.run(config);
     } else {
         defaultProcessing();
     }

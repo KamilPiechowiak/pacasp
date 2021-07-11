@@ -6,7 +6,8 @@ void Recorder::open_log(string name) {
     if(f.is_open()) {
         f.close();
     }
-    f.open(path + "/" + to_string(instance_id) + "_" + name + ".log");
+    filename = to_string(instance_id) + "_" + name + ".log";
+    f.open(path + "/" + filename);
     start_timer();
 }
 
@@ -25,4 +26,8 @@ bool Recorder::should_finish() {
 void Recorder::record(ll best_height) {
     ll ti = ::getTime(t_start);
     f << ti << " " << best_height << "\n";
+}
+
+string Recorder::get_filename() {
+    return filename;
 }

@@ -1,0 +1,10 @@
+{
+    "max_time": 60000,
+    "output_path": "out_local",
+    "0": {
+        "instance_id": "3262",
+        "algorithms": [
+            "SKISH"
+        ]
+    }
+}

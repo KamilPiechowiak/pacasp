@@ -12,7 +12,6 @@ private:
     vector<Rectangle> &rect;
     Recorder &recorder;
     BottomLeftPacking bottom_left_packing;
-    void saveImg(string name, ll height);
     vector<int> getOrder();
     vector<int> getRandomOrder();
     void reverseSequence(int a, int b, vector<int> &ord);

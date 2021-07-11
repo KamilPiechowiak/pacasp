@@ -5,8 +5,7 @@
 
 struct Runner : Parallel {
     Runner(ll maxTime);
-    void run();
-    void generateInstance();
+    void run(json config);
 };
 
 #endif

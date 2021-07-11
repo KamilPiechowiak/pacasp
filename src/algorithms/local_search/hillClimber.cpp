@@ -62,6 +62,6 @@ ll HillClimber::run(PackingAlgorithm *packing_algorithm, vector<int> &ord) {
         recorder.record(best_height);
     }
     cerr << iter << "\n";
-    packing_algorithm->run_and_save("hc", ord);
+    packing_algorithm->run_and_save(recorder.get_filename(), ord);
     return best_height;
 }

@@ -6,6 +6,7 @@
 class Recorder {
 private:
     string path;
+    string filename;
     chrono::system_clock::time_point t_start;
     ofstream f;
     ll max_time;
@@ -17,6 +18,7 @@ public:
     void open_log(string name);
     bool should_finish();
     void record(ll best_height);
+    string get_filename();
 };
 
 #endif

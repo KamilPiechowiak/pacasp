@@ -39,7 +39,7 @@ private:
     int instanceId;
 public:
     Tuner(ll maxTime);
-    void run();
+    void run(json config);
     void generateInstance();
     void computeParameters(vector<pdd> v);
     void rec(int d, vector<pdd> &v);

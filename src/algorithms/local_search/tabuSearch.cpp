@@ -87,6 +87,6 @@ ll TabuSearch::run(PackingAlgorithm *packing_algorithm, vector<int> &ord) {
         }
     }
     cerr << iter << "\n";
-    packing_algorithm->run_and_save("ts", best_ord);
+    packing_algorithm->run_and_save(recorder.get_filename(), best_ord);
     return best_height;
 }

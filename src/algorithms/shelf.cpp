@@ -1,4 +1,5 @@
 #include"shelf.hpp"
+#include"general/placementSaver.hpp"
 
 Shelf::Shelf(ll w, vector<Rectangle> &rr, Recorder &recorder) : w(w), rr(rr), recorder(recorder) {
     placement.resize(SIZE(rr));
@@ -7,6 +8,8 @@ Shelf::Shelf(ll w, vector<Rectangle> &rr, Recorder &recorder) : w(w), rr(rr), re
 
 void Shelf::saveImg(string name, ll height, vector<Rectangle> &rect) {
     ImgSaver::saveImg(pref+name, w, height, rect, placement);
+    PlacementSaver placementSaver;
+    placementSaver.savePlacement(name, w, height, rect, placement);
 }
 
 ll Shelf::nfdh() {
@@ -142,15 +145,16 @@ ll Shelf::genericGreedy(ggOrder order, ggShelf shelf, bool rotateShelves) {
         if(m%2 == 1) {
             shelves.push_back({});
         }
+        ShelfCache shelfCache(w, rect, shelves, false);
         for(int i=0; i < (int)shelves.size(); i++) {
-            ll shelfWidth = findWidth(shelves[i], rect);
+            ll shelfWidth = shelfCache.findWidth(shelves[i], rect);
             int id = rect.size();
             shelves[i].push_back(id);
             rect.push_back(Rectangle(w-shelfWidth, 0, id));
         }
         placement.resize(rect.size());
         for(int i=0; i < (int)shelves.size(); i+=2) {
-            ll shelfHeight = matchLevels(shelves[i], shelves[i+1], rect);
+            ll shelfHeight = shelfCache.matchLevels(shelves[i], shelves[i+1], rect);
             ll currentWidth = 0;
             for(int a=0; a < (int)shelves[i].size(); a++) {
                 Rectangle &r = rect[shelves[i][a]];
@@ -171,7 +175,7 @@ ll Shelf::genericGreedy(ggOrder order, ggShelf shelf, bool rotateShelves) {
     }
     ll bestHeight = currentHeight;
     recorder.record(bestHeight);
-    saveImg(name, currentHeight, rect);
+    saveImg(recorder.get_filename(), currentHeight, rect);
     return currentHeight;
 }
 
@@ -200,92 +204,46 @@ vector<vector<int>> Shelf::getBFDHLevels(vector<Rectangle> rect) {
     return levels;
 }
 
-ll Shelf::findWidth(vector<int> &v, vector<Rectangle> &rect) {
-    ll res=0;
-    for(int a : v) {
-        res+=rect[a].width;
-    }
-    return res;
-}
-
-ll Shelf::matchLevels(vector<int> &a, vector<int> &b, vector<Rectangle> &rect) {
-    int i=0, j=b.size()-1;
-    ll aw=0, bw=0;
-    ll h=0;
-    while(i < (int)a.size() && j >= 0) {
-        Rectangle &ra = rect[a[i]], &rb = rect[b[j]];
-        h = max(h, ra.height + rb.height);
-        if(aw+ra.width < bw+rb.width) {
-            i++;
-            aw+=ra.width;
-        } else {
-            j--;
-            bw+=rb.width;
-        }
-    }
-    return h;
-}
-
-vector<vector<ll>> Shelf::compress(vector<Rectangle> &rect, vector<vector<int>> &levels) {
-    int n = levels.size();
-    vector<vector<ll>> d;
-    d.resize(n);
-    for(int i=0; i < n; i++) {
-        d[i].resize(n);
-    }
-    for(int i=0; i < n; i++) {
-        ll levelWidth = findWidth(levels[i], rect);
-        int id = rect.size();
-        levels[i].push_back(id);
-        rect.push_back(Rectangle(w-levelWidth, 0, id));
-    }
-    for(int i=0; i < n; i++) {
-        for(int j=i+1; j < n; j++) {
-            d[i][j] = matchLevels(levels[i], levels[j], rect);
-            d[j][i] = d[i][j];
-        }
-    }
-    return d;
-}
-
-pair<vector<int>, ll> Shelf::getOrder(vector<vector<ll>> &d, int m) {
+pair<vector<int>, ll> Shelf::getOrder(ShelfCache &shelfCache, int m) {
     vector<int> ord;
     for(int i=0; i < m; i++) {
         ord.push_back(i);
     }
     ll currentHeight = 0;
     for(int i=0; i < m; i+=2) {
-        currentHeight+=d[ord[i]][ord[i+1]];
+        currentHeight+=shelfCache.getPairHeight(ord[i], ord[i+1]);
     }
     return {ord, currentHeight};
 }
 
-pair<pii, ll> Shelf::getNeighbour(int a, int b, vector<int> &ord, vector<vector<ll>> &d) {
+pair<pii, ll> Shelf::getNeighbour(int a, int b, vector<int> &ord, ShelfCache &shelfCache) {
     int x = (a/2)*2;
     int y = (b/2)*2;
     if(x == y) {
         return {{a, b}, 0};
     }
-    ll dh = -d[ord[x]][ord[x+1]] - d[ord[y]][ord[y+1]];
+    ll dh = -shelfCache.getPairHeight(ord[x], ord[x+1]) - shelfCache.getPairHeight(ord[y], ord[y+1]);
     if((a%2) == (b%2)) {
-        dh+=d[ord[x]][ord[y+1]] + d[ord[y]][ord[x+1]];
+        dh+=shelfCache.getPairHeight(ord[x], ord[y+1]) + shelfCache.getPairHeight(ord[y], ord[x+1]);
     } else {
-        dh+=d[ord[x]][ord[y]] + d[ord[x+1]][ord[y+1]];
+        dh+=shelfCache.getPairHeight(ord[x], ord[y]) + shelfCache.getPairHeight(ord[x+1], ord[y+1]);
     }
     return {{a, b}, dh};
 }
 
-pair<pii, ll> Shelf::getRandomNeighbour(vector<int> &ord, vector<vector<ll>> &d) {
+pair<pii, ll> Shelf::getRandomNeighbour(vector<int> &ord, ShelfCache &shelfCache) {
     if(ord.size() < 3) {
         return {{0, 1}, 0};
     }
     int a = ri(0, ord.size()-1);
     int b = ri(0, ord.size()-3); //swap elements from different pairs
     if((a/2)*2 <= b) b+=2;
-    return getNeighbour(a, b, ord, d);
+    return getNeighbour(a, b, ord, shelfCache);
 }
 
-void Shelf::draw(string name, vector<int> &ord, vector<vector<int>> &levels, vector<Rectangle> &rect, vector<vector<ll>> &d) {
+void Shelf::draw(string name, vector<int> &ord, ShelfCache &shelfCache) {
+    vector<vector<int>> levels = shelfCache.getLevels();
+    vector<Rectangle> rect = shelfCache.getRect();
     placement.resize(rect.size());
     ll currentHeight=0;
     for(int i=0; i < (int)ord.size(); i+=2) {
@@ -295,7 +253,7 @@ void Shelf::draw(string name, vector<int> &ord, vector<vector<int>> &levels, vec
             placement[r.id] = {pos, currentHeight};
             pos+=r.width;
         }
-        currentHeight+=d[ord[i]][ord[i+1]];
+        currentHeight+=shelfCache.getPairHeight(ord[i], ord[i+1]);
         pos=0;
         reverse(levels[ord[i+1]].begin(), levels[ord[i+1]].end());
         for(int a : levels[ord[i+1]]) {
@@ -314,8 +272,8 @@ ll Shelf::hillClimber() {
     recorder.open_log("SHhillClimber");
     vector<Rectangle> rect = rr;
     vector<vector<int>> levels = getBFDHLevels(rect);
-    vector<vector<ll>> d = compress(rect, levels);
-    auto x = getOrder(d, levels.size());
+    ShelfCache shelfCache(w, rect, levels);
+    auto x = getOrder(shelfCache, levels.size());
     vector<int> ord = x.first;
     ll bestHeight = x.second;
     recorder.record(bestHeight);
@@ -323,7 +281,7 @@ ll Shelf::hillClimber() {
         int dh=0;
         for(int i=0; i < (int)ord.size(); i+=2) {
             for(int j=i+2; j < (int)ord.size(); j++) {
-                auto x = getNeighbour(i, j, ord, d);
+                auto x = getNeighbour(i, j, ord, shelfCache);
                 if(x.second < 0) {
                     dh+=x.second;
                     swap(ord[i], ord[j]);
@@ -342,7 +300,7 @@ ll Shelf::hillClimber() {
         recorder.record(bestHeight);
 
     }
-    draw("hillClimber", ord, levels, rect, d);
+    draw(recorder.get_filename(), ord, shelfCache);
     return bestHeight;
 }
 
@@ -351,8 +309,8 @@ ll Shelf::simulatedAnnealing() {
 
     vector<Rectangle> rect = rr;
     vector<vector<int>> levels = getBFDHLevels(rect);
-    vector<vector<ll>> d = compress(rect, levels);
-    auto x = getOrder(d, levels.size());
+    ShelfCache shelfCache(w, rect, levels);
+    auto x = getOrder(shelfCache, levels.size());
     vector<int> ord = x.first;
     ll currentHeight = x.second;
     vector<int> best = ord;
@@ -362,7 +320,7 @@ ll Shelf::simulatedAnnealing() {
     double mult = 0.9;
     int i=0;
     while(true) {
-        auto x = getRandomNeighbour(ord, d);
+        auto x = getRandomNeighbour(ord, shelfCache);
         int df = x.second;
         int a = x.first.first;
         int b = x.first.second;
@@ -383,7 +341,7 @@ ll Shelf::simulatedAnnealing() {
         i++;
     }
 
-    draw("simulatedAnnealing", best, levels, rect, d);
+    draw(recorder.get_filename(), best, shelfCache);
     return bestHeight;
 }
 
@@ -392,8 +350,8 @@ ll Shelf::simulatedAnnealing2(double mult0, int maxNumberOfAccepted, int maxNumb
     
     vector<Rectangle> rect = rr;
     vector<vector<int>> levels = getBFDHLevels(rect);
-    vector<vector<ll>> d = compress(rect, levels);
-    auto x = getOrder(d, levels.size());
+    ShelfCache shelfCache(w, rect, levels);
+    auto x = getOrder(shelfCache, levels.size());
     vector<int> ord = x.first;
     ll currentHeight = x.second;
     vector<int> best = ord;
@@ -407,7 +365,7 @@ ll Shelf::simulatedAnnealing2(double mult0, int maxNumberOfAccepted, int maxNumb
     int numberOfIterations = 0;
     int i=0;
     while(true) {
-        auto x = getRandomNeighbour(ord, d);
+        auto x = getRandomNeighbour(ord, shelfCache);
         ll df = x.second;
         int a = x.first.first;
         int b = x.first.second;
@@ -446,6 +404,6 @@ ll Shelf::simulatedAnnealing2(double mult0, int maxNumberOfAccepted, int maxNumb
         // cerr << T << "\n";
     }
 
-    draw("simulatedAnnealing2", best, levels, rect, d);
+    draw(recorder.get_filename(), best, shelfCache);
     return bestHeight;
 }

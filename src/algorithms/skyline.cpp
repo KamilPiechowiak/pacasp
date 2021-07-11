@@ -29,7 +29,7 @@ ll Skyline::burke() {
     BurkeScoreRule scoreRule;
     skyline_packing->setScoreRule(&scoreRule);
 
-    ll best_height = skyline_packing->run_and_save("Burke", ord);
+    ll best_height = skyline_packing->run_and_save(recorder.get_filename(), ord);
     recorder.record(best_height);
     return best_height;
 }
@@ -98,6 +98,7 @@ ll Skyline::ish() {
         }
     }
     endLoop: //saveImg("ISH", bestHeight);
+    skyline_packing->run_and_save(recorder.get_filename(), bestOrder);
     return bestHeight;
 }
 

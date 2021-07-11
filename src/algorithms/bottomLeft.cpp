@@ -55,7 +55,7 @@ ll BottomLeft::blds(function<bool(const Rectangle &a, const Rectangle &b)> sorti
     if(reverseOrder) {
         reverse(ord.begin(), ord.end());
     }
-    ll best_height = bottom_left_packing.run_and_save(name, ord);
+    ll best_height = bottom_left_packing.run_and_save(recorder.get_filename(), ord);
     recorder.record(best_height);
     return best_height;
 }
@@ -104,7 +104,7 @@ ll BottomLeft::graspBlds(int bufferSize, function<bool(const Rectangle &a, const
             recorder.record(bestHeight);
         }
     }
-    return bottom_left_packing.run_and_save(name, best_ord);
+    return bottom_left_packing.run_and_save(recorder.get_filename(), best_ord);
 }
 
 ll BottomLeft::graspBldw(int bufferSize) {

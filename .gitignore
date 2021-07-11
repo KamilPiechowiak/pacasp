@@ -4,7 +4,8 @@ docs
 gen
 instances
 obj
-out
+out*
+placements
 portfolios
 images
 sp
@@ -12,6 +13,5 @@ tuning
 *.zip
 __pycache__
 md
-out_local
 paper
 used_instances

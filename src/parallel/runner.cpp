@@ -1,88 +1,85 @@
 #include"runner.hpp"
+
+
 #include"algorithms/bottomLeft.hpp"
 #include"algorithms/shelf.hpp"
 #include"algorithms/bounds.hpp"
 #include"algorithms/skyline.hpp"
 
+
 Runner::Runner(ll maxTime) : Parallel(maxTime) {}
 
-void Runner::generateInstance() {
-    // int seed = nodeId+1000;
-    string name = "instances/" + to_string(nodeId) + ".in";
-    // string instr = "./gen " + to_string(seed) + " 0 > " + name;
-    // if(nodeId < 2000) {
-    //     system(instr.c_str());
-    // }
-    filename = name;
+vector<string> split(string s, char split_on) {
+    vector<string> res;
+    string acc;
+    for(char c : s) {
+        if(c == split_on) {
+            if(acc != "") {
+                res.push_back(acc);
+                acc = "";
+            }
+        } else {
+            acc+= c;
+        }
+    }
+    if(acc != "") {
+        res.push_back(acc);
+    }
+    return res;
 }
 
-void Runner::run() {
-    generateInstance();
+void Runner::run(json config) {
+    int instance_id = stoi((string)config[to_string(nodeId)]["instance_id"]);
+    filename =  "instances/" + to_string(instance_id) + ".in";  
     loadData();
-    Recorder recorder("out", nodeId, maxTime);
+    Recorder recorder(config["output_path"], instance_id, maxTime);
 
     Bounds bounds(w, rect, recorder);
     BottomLeft bottom_left(w, rect, recorder);
     Shelf shelf(w, rect, recorder);
     Skyline skyline(w, rect, recorder);
-    // bounds.byArea();
-    // bounds.byWiderThanHalf();
-    
-    // for(int i=0; i < 4; i++) {
-    //     for(int j=0; j < 3; j++) {
-    //         for(int k=0; k < 2; k++) {
-    //             shelf.genericGreedy((ggOrder)i, (ggShelf)j, (bool)k);
-    //         }
-    //     }
-    // }
-    // shelf.hillClimber();
-    // // shelf.simulatedAnnealing2(0.606531, 10, 10000);
-    // shelf.simulatedAnnealing2(0.899661, 1, 10000);
-    // // shelf.simulatedAnnealing2(0.977887, 10, 10000);
-
-    // bottom_left.bldh();
-    // bottom_left.bldw();
-    // bottom_left.blda();
-    // bottom_left.blih();
-    // bottom_left.bliw();
-    // bottom_left.blia();
-
-    // bottom_left.graspBldh(5);
-    // // bottom_left.graspBldh(10);
-    // bottom_left.graspBlda(5);
-    // // bottom_left.graspBldw(2);
-    // bottom_left.graspBldw(5);
-    // // bottom_left.graspBldw(1000);
-    
-    bottom_left.hillClimber(0);
-    bottom_left.hillClimber(1);
-
-    bottom_left.simulatedAnnealing(0.606531, 1, 1000);
-    // bottom_left.simulatedAnnealing(0.606531, 1, 10000);
-    // bottom_left.simulatedAnnealing(0.899661, 3, 1000);
-    // bottom_left.simulatedAnnealing(0.995282, 1, 10000);
-    
-    bottom_left.multiStartLocalSearch(215);
-
-    // bottom_left.tabuSearch(true, 2, 22);
-    bottom_left.tabuSearch(true, 22, 46);
-    // bottom_left.tabuSearch(true, 100, 46);
-    // bottom_left.tabuSearch(true, 215, 215);
-    
-    // bottom_left.tabuSearch(false, 1, 46);
-    bottom_left.tabuSearch(false, 5, 46);
-    // bottom_left.tabuSearch(false, 5, 100);
-    // bottom_left.tabuSearch(false, 22, 22);
-
-    skyline.burke();
-    skyline.ish();
-
-    skyline.hillClimber(0);
-    skyline.hillClimber(1);
-    skyline.tabuSearch(true, 215, 215);
-    skyline.tabuSearch(false, 1000, 215);
-    skyline.simulatedAnnealing(0.606531, 1, 1000);
-    skyline.multiStartLocalSearch(1000);
+    for(string name : config[to_string(nodeId)]["algorithms"]) {
+        vector<string> arr = split(name, '_');
+        string pref = name.substr(0, 2);
+        if(name == "BLblda") bottom_left.blda();
+        else if(name == "BLbldh") bottom_left.bldh();
+        else if(name == "BLbldw") bottom_left.bldw();
+        else if(name == "BLblia") bottom_left.blia();
+        else if(name == "BLblih") bottom_left.blih();
+        else if(name == "BLbliw") bottom_left.bliw();
+        else if(arr[0] == "BLgraspBlda") bottom_left.graspBlda(stoi(arr[1]));
+        else if(arr[0] == "BLgraspBldh") bottom_left.graspBldh(stoi(arr[1]));
+        else if(arr[0] == "BLgraspBldw") bottom_left.graspBldw(stoi(arr[1]));
+        else if(arr[0] == "BLhc") bottom_left.hillClimber(stoi(arr[1]));
+        else if(arr[0] == "BLmls") bottom_left.multiStartLocalSearch(stoi(arr[1]));
+        else if(arr[0] == "BLsa") bottom_left.simulatedAnnealing(stod(arr[1]), stoi(arr[2]), stoi(arr[3]));
+        else if(arr[0] == "BLts") bottom_left.tabuSearch(stoi(arr[1]), stoi(arr[2]), stoi(arr[3])); 
+        else if(name == "BoundsByArea") bounds.byArea();
+        else if(name == "BoundsbyWiderThanHalf") bounds.byWiderThanHalf();
+        else if(arr[0] == "SHgg") {
+            map<string, ggOrder> m_order {
+                {"heightAsc", heightAsc},
+                {"heightDsc", heightDsc},
+                {"widthAsc", widthAsc},
+                {"widthDsc", widthDsc}
+            };
+            map<string, ggShelf> m_fit {
+                {"bestFit", bestFit},
+                {"worstFit", worstFit},
+                {"nextFit", nextFit}
+            };
+            shelf.genericGreedy(m_order[arr[1]], m_fit[arr[2]], arr.size() > 3 && arr[3] == "rotated");
+        }
+        else if(arr[0] == "SHhillClimber") shelf.hillClimber();
+        else if(arr[0] == "SHsa") shelf.simulatedAnnealing2(stod(arr[1]), stoi(arr[2]), stoi(arr[3]));
+        else if(arr[0] == "SKBurke") skyline.burke();
+        else if(arr[0] == "SKhc") skyline.hillClimber(stoi(arr[1]));
+        else if(arr[0] == "SKISH") skyline.ish();
+        else if(arr[0] == "SKmls") skyline.multiStartLocalSearch(stoi(arr[1]));
+        else if(arr[0] == "SKsa") skyline.simulatedAnnealing(stod(arr[1]), stoi(arr[2]), stoi(arr[3]));
+        else if(arr[0] == "SKts") skyline.tabuSearch(stod(arr[1]), stoi(arr[2]), stoi(arr[3]));
+        else { throw runtime_error("no such algorithm like: " + name); }
+    }
 
     destroy();
 }
