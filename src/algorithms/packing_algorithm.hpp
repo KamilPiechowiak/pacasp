@@ -13,6 +13,7 @@ protected:
 public:
     PackingAlgorithm(ll width, vector<Rectangle> rect, string name);
     virtual ll run(vector<int> &ord) =0;
+    void save(string name, ll height);
     ll run_and_save(string name, vector<int> &ord);
 };
 

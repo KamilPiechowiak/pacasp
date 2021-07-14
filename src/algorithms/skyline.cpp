@@ -29,8 +29,9 @@ ll Skyline::burke() {
     BurkeScoreRule scoreRule;
     skyline_packing->setScoreRule(&scoreRule);
 
-    ll best_height = skyline_packing->run_and_save(recorder.get_filename(), ord);
+    ll best_height = skyline_packing->run(ord);
     recorder.record(best_height);
+    skyline_packing->save(recorder.get_filename(), best_height);
     return best_height;
 }
 

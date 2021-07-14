@@ -6,10 +6,14 @@ PackingAlgorithm::PackingAlgorithm(ll width, vector<Rectangle> rect, string name
     placement.resize(SIZE(rect));
 }
 
-ll PackingAlgorithm::run_and_save(string name, vector<int> &ord) {
-    ll height = this->run(ord);
+void PackingAlgorithm::save(string name, ll height) {
     ImgSaver::saveImg(this->name+"-"+name, w, height, rect, placement);
     PlacementSaver placementSaver;
     placementSaver.savePlacement(name, w, height, rect, placement);
+}
+
+ll PackingAlgorithm::run_and_save(string name, vector<int> &ord) {
+    ll height = this->run(ord);
+    save(name, height);
     return height;
 }
